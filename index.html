@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Los Chalados de la Euritmia – Tilisarao, San Luis</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ff0064',
+                        dark: '#0f0f0f',
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- React -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        /* Estilos base que complementan Tailwind */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            background-color: #000;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        #canvas-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 0, 100, 0.8);
+        }
+        
+        .gradient-overlay {
+            background: linear-gradient(45deg, rgba(0,0,0,0.9) 0%, rgba(255,0,100,0.1) 100%);
+        }
+        
+        /* Animaciones */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .animate-pulse-slow {
+            animation: pulse 3s infinite;
+        }
+
+        .music-card {
+            transition: all 0.3s ease;
+        }
+
+        .music-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 0, 100, 0.1);
+        }
+
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+
+        .hover-scale:hover {
+            transform: scale(1.05);
+        }
+    </style>
+    
+    <!-- AOS CSS para animaciones de scroll -->
+    <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+</head>
+<body class="font-poppins text-white">
+    <!-- Canvas para animación de fondo -->
+    <canvas id="canvas-background"></canvas>
+    
+    <!-- (Bloque de integrantes fijo eliminado: los integrantes se mostrarán únicamente a través del componente React About) -->
+    
+    <!-- Contenido principal (React) -->
+    <div id="root" class="relative z-10"></div>
+    
+    <!-- Audio -->
+    <audio id="audio" preload="auto" loop>
+        <source src="Turno de amor Versiòn Pipo Zavala.mp3" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+    
+
+    
+    <!-- Componentes React -->
+    <script type="text/babel">
+        // Componente Header
+        const Header = () => {
+            return (
+                <header className="fixed top-0 left-0 w-full bg-black bg-opacity-50 backdrop-blur-sm z-50 py-4">
+                    <div className="container mx-auto px-4 flex justify-between items-center">
+                        <h1 className="text-xl md:text-2xl font-bold text-glow">
+                            Los Chalados de la Euritmia
+                        </h1>
+                        <nav>
+                            <ul className="flex space-x-6">
+                                <li><a href="#inicio" className="hover:text-primary transition-colors">Inicio</a></li>
+                                <li><a href="#nosotros" className="hover:text-primary transition-colors">Nosotros</a></li>
+                                <li><a href="#integrantes" className="hover:text-primary transition-colors">Integrantes</a></li>
+                                <li><a href="#musica" className="hover:text-primary transition-colors">Música</a></li>
+                                <li><a href="#contacto" className="hover:text-primary transition-colors">Contacto</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </header>
+            );
+        };
+        
+        // Componente Hero
+        const Hero = ({ playAudio }) => {
+            return (
+                <section id="inicio" className="min-h-screen flex items-center justify-center relative">
+                    <div className="text-center px-4 py-20 md:py-0">
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4 text-glow animate-pulse-slow uppercase tracking-wider">
+                            Los Chalados de la Euritmia
+                        </h1>
+                        <p className="text-xl md:text-2xl mb-8 opacity-85">
+                            TILISARAO, SAN LUIS – ARGENTINA
+                        </p>
+                        <button 
+                            onClick={playAudio}
+                            className="bg-opacity-10 bg-white border-2 border-white border-opacity-30 hover:bg-opacity-20 text-white px-8 py-3 rounded-full text-lg font-bold transition-all hover:scale-105 flex items-center mx-auto mb-4"
+                        >
+                            <i className="ph ph-play text-xl mr-2"></i>
+                            REPRODUCIR
+                        </button>
+                        <p className="text-center text-sm mt-2"><span className="text-primary font-bold">♥ Agradecimiento especial:</span> A Pipo Zavala por su maravillosa versión de "Turno de Amor"</p>
+                    </div>
+                </section>
+            );
+        };
+        
+        // Datos compartidos para los componentes
+        const members = [
+            { name: "Marcos Emilio Martel",      role: "Voz",       icon: "ph ph-microphone" },
+            { name: "Esteban Federico Mansilla", role: "Guitarra",  icon: "ph ph-guitar"    },
+            { name: "Valentín Ramos",            role: "Bajo",      icon: "ph ph-guitar"    },
+            { name: "Carlos Nollac",             role: "Batería",   icon: "ph ph-drum"     }         
+        ];
+
+        // Componente Nosotros - Versión simple
+        const About = () => {
+            return (
+                <section id="nosotros" className="py-16 bg-black text-white">
+                    <div className="container mx-auto px-4">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">Sobre Nosotros</h2>
+                        <div className="max-w-4xl mx-auto">
+                            <div className="bg-gray-900 p-8 rounded-lg mb-8">
+                                <h3 className="text-2xl font-bold mb-4 text-primary">Nuestra Historia</h3>
+                                <p className="mb-4">
+                                    Los Chalados de la Euritmia es una banda originaria de Tilisarao, San Luis, 
+                                    que ha revolucionado la escena musical local con su estilo único y energético.
+                                </p>
+                                <p>
+                                    Formados en 2010, hemos recorrido los escenarios más importantes de la provincia, 
+                                    llevando nuestra música a todos los rincones de Argentina.
+                                </p>
+                            </div>
+                            
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div className="bg-gray-900 p-6 rounded-lg">
+                                    <h3 className="text-xl font-bold mb-4 text-primary">Nuestro Estilo</h3>
+                                    <p>Fusión de ritmos tradicionales argentinos con sonidos modernos que crean una experiencia auditiva única.</p>
+                                </div>
+                                <div className="bg-gray-900 p-6 rounded-lg">
+                                    <h3 className="text-xl font-bold mb-4 text-primary">Nuestra Filosofía</h3>
+                                    <p>Creemos en la música como vehículo de emociones y en su poder para unir personas de todas las edades y procedencias.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+        
+        // Componente Integrantes
+        const IntegrantesPanel = () => {
+            return (
+                <section id="integrantes" className="py-20 relative bg-black bg-opacity-70">
+                    <div className="container mx-auto px-4">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center text-glow">Integrantes</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+                            {members.map((member) => (
+                                <div key={member.name} 
+                                     className="bg-white bg-opacity-5 p-6 rounded-lg hover:bg-opacity-10 transition-all hover-scale text-center">
+                                    <div className="w-24 h-24 md:w-28 md:h-28 bg-gradient-to-br from-primary to-pink-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+                                        <i className={`${member.icon} text-3xl md:text-4xl`}></i>
+                                    </div>
+                                    <h3 className="font-semibold">{member.name}</h3>
+                                    <p className="text-sm text-gray-300">{member.role}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+        
+        // Componente Música
+        const Music = () => {
+            const [isPlayingTrack, setIsPlayingTrack] = React.useState(false);
+            
+            const playTrack = () => {
+                const audio = document.getElementById('audio');
+                if (isPlayingTrack) {
+                    audio.pause();
+                    setIsPlayingTrack(false);
+                } else {
+                    audio.play()
+                        .then(() => {
+                            setIsPlayingTrack(true);
+                        })
+                        .catch(error => {
+                            console.error("Error al reproducir:", error);
+                        });
+                }
+            };
+
+            const tracks = [
+                { 
+                    id: 1, 
+                    title: "Turno de amor", 
+                    version: "Versión Pipo Zavala", 
+                    duration: "4:32",
+                    src: "Turno de amor Versiòn Pipo Zavala.mp3"
+                },
+                { id: 2, title: "Noche de Euritmia", version: "Original", duration: "3:45" },
+                { id: 3, title: "Tilisarao en mi corazón", version: "En vivo", duration: "5:12" },
+                { id: 4, title: "Chalados por siempre", version: "Acústico", duration: "3:58" }
+            ];
+            
+            return (
+                <section id="musica" className="py-20 relative bg-black bg-opacity-70">
+                    <div className="container mx-auto px-4">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center text-glow">Nuestra Música</h2>
+                        
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <div>
+                                <h3 className="text-2xl font-bold mb-6">Últimos lanzamientos</h3>
+                                <div className="space-y-4">
+                                    {tracks.map(track => (
+                                        <div key={track.id} className="bg-white bg-opacity-5 p-4 rounded-lg hover:bg-opacity-10 transition-all flex justify-between items-center music-card">
+                                            <div>
+                                                <h4 className="font-bold text-lg">{track.title}</h4>
+                                                <p className="text-sm text-gray-400">{track.version}</p>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <span className="mr-4 text-sm">{track.duration}</span>
+                                                <button 
+                                                    onClick={playTrack}
+                                                    className="w-10 h-10 rounded-full bg-primary bg-opacity-20 hover:bg-opacity-40 flex items-center justify-center transition-all"
+                                                >
+                                                    <i className={`ph ${isPlayingTrack ? 'ph-pause' : 'ph-play'} text-lg`}></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            
+                            <div className="bg-black bg-opacity-50 p-6 rounded-lg border border-primary border-opacity-30">
+                                <h3 className="text-2xl font-bold mb-6">Próximos shows</h3>
+                                <div className="space-y-6">
+                                    <div>
+                                        <div className="flex justify-between mb-2">
+                                            <h4 className="font-bold">Festival de Verano</h4>
+                                            <span className="text-primary">15 Dic 2023</span>
+                                        </div>
+                                        <p className="text-sm text-gray-400">Plaza Central, Tilisarao</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <div className="flex justify-between mb-2">
+                                            <h4 className="font-bold">Noche de Talentos</h4>
+                                            <span className="text-primary">22 Dic 2023</span>
+                                        </div>
+                                        <p className="text-sm text-gray-400">Teatro Municipal, San Luis</p>
+                                    </div>
+                                    
+                                    <div>
+                                        <div className="flex justify-between mb-2">
+                                            <h4 className="font-bold">Fiesta Provincial</h4>
+                                            <span className="text-primary">5 Ene 2024</span>
+                                        </div>
+                                        <p className="text-sm text-gray-400">Parque de las Naciones, Villa Mercedes</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+        
+        // Componente Contacto
+        const Contact = () => {
+            return (
+                <section id="contacto" className="py-20 relative">
+                    <div className="absolute inset-0 gradient-overlay"></div>
+                    <div className="container mx-auto px-4 relative z-10">
+                        <h2 className="text-3xl md:text-4xl font-bold mb-10 text-center text-glow">Contacto</h2>
+                        
+                        <div className="grid md:grid-cols-2 gap-10">
+                            <div>
+                                <h3 className="text-2xl font-bold mb-6">¡Escríbenos!</h3>
+                                <form className="space-y-4">
+                                    <div>
+                                        <label className="block mb-2">Nombre</label>
+                                        <input type="text" className="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg p-3 focus:outline-none focus:border-primary" />
+                                    </div>
+                                    <div>
+                                        <label className="block mb-2">Email</label>
+                                        <input type="email" className="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg p-3 focus:outline-none focus:border-primary" />
+                                    </div>
+                                    <div>
+                                        <label className="block mb-2">Mensaje</label>
+                                        <textarea rows="4" className="w-full bg-white bg-opacity-10 border border-white border-opacity-20 rounded-lg p-3 focus:outline-none focus:border-primary"></textarea>
+                                    </div>
+                                    <button type="submit" className="bg-primary hover:bg-opacity-80 text-white px-6 py-3 rounded-lg font-bold transition-all">
+                                        Enviar mensaje
+                                    </button>
+                                </form>
+                            </div>
+                            
+                            <div>
+                                <h3 className="text-2xl font-bold mb-6">Síguenos</h3>
+                                <div className="flex space-x-4 mb-8">
+                                    <a href="#" className="w-12 h-12 rounded-full bg-white bg-opacity-10 flex items-center justify-center hover:bg-primary transition-all">
+                                        <i className="ph ph-instagram-logo text-xl"></i>
+                                    </a>
+                                    <a href="#" className="w-12 h-12 rounded-full bg-white bg-opacity-10 flex items-center justify-center hover:bg-primary transition-all">
+                                        <i className="ph ph-facebook-logo text-xl"></i>
+                                    </a>
+                                    <a href="#" className="w-12 h-12 rounded-full bg-white bg-opacity-10 flex items-center justify-center hover:bg-primary transition-all">
+                                        <i className="ph ph-youtube-logo text-xl"></i>
+                                    </a>
+                                    <a href="#" className="w-12 h-12 rounded-full bg-white bg-opacity-10 flex items-center justify-center hover:bg-primary transition-all">
+                                        <i className="ph ph-spotify-logo text-xl"></i>
+                                    </a>
+                                </div>
+                                
+                                <div className="bg-black bg-opacity-50 p-6 rounded-lg border border-primary border-opacity-30">
+                                    <h4 className="font-bold text-xl mb-4">Información de contacto</h4>
+                                    <div className="space-y-3">
+                                        <p className="flex items-center">
+                                            <i className="ph ph-envelope text-primary mr-3"></i>
+                                            <span>chalados@euritmia.com</span>
+                                        </p>
+                                        <p className="flex items-center">
+                                            <i className="ph ph-phone text-primary mr-3"></i>
+                                            <span>+54 266 123-4567</span>
+                                        </p>
+                                        <p className="flex items-center">
+                                            <i className="ph ph-map-pin text-primary mr-3"></i>
+                                            <span>Tilisarao, San Luis, Argentina</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+        };
+        
+        // Componente Footer
+        const Footer = () => {
+            return (
+                <footer className="py-8 bg-black bg-opacity-80">
+                    <div className="container mx-auto px-4 text-center">
+                        <p className="mb-4">© 2025 Los Chalados de la Euritmia - Todos los derechos reservados</p>
+                        <div className="flex justify-center space-x-6">
+                            <a href="#" className="text-gray-400 hover:text-white">Política de privacidad</a>
+                            <a href="#" className="text-gray-400 hover:text-white">Términos de uso</a>
+                            <a href="#" className="text-gray-400 hover:text-white">Prensa</a>
+                        </div>
+                    </div>
+                </footer>
+            );
+        };
+        
+        // Componente principal App
+        const App = () => {
+            const [isPlaying, setIsPlaying] = React.useState(false);
+            
+            const playAudio = () => {
+                const audio = document.getElementById('audio');
+                
+                if (isPlaying) {
+                    audio.pause();
+                    setIsPlaying(false);
+                } else {
+                    audio.play()
+                        .then(() => {
+                            setIsPlaying(true);
+                        })
+                        .catch(error => {
+                            console.error("Error al reproducir audio:", error);
+                        });
+                }
+            };
+            
+            return (
+                <>
+                    <Header />
+                    <Hero playAudio={playAudio} />
+                    <About />
+                    <IntegrantesPanel />
+                    <Music />
+                    <Contact />
+                    <Footer />
+                </>
+            );
+        };
+        
+        // Renderizar la aplicación
+        const rootElement = document.getElementById('root');
+        ReactDOM.render(<App />, rootElement);
+    </script>
+    
+    <!-- Script para la animación de fondo -->
+    <script>
+        // Configuración inicial
+        const canvas = document.getElementById('canvas-background');
+        const ctx = canvas.getContext('2d');
+        const audio = document.getElementById('audio');
+        
+        // Ajustar tamaño del canvas al tamaño de la ventana
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        
+        // Inicializar
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+        
+        // Variables para el análisis de audio
+        let audioContext;
+        let analyser;
+        let dataArray;
+        let source;
+        let isPlaying = false;
+        let animationId;
+        
+        // Inicializar visualización de audio
+        function initAudio() {
+            audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            analyser = audioContext.createAnalyser();
+            
+            source = audioContext.createMediaElementSource(audio);
+            source.connect(analyser);
+            analyser.connect(audioContext.destination);
+            
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            dataArray = new Uint8Array(bufferLength);
+            
+            // Iniciar animación
+            animate();
+        }
+        
+        // Partículas para la animación
+        const particles = [];
+        const particleCount = 100;
+        
+        // Crear partículas iniciales
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                size: Math.random() * 5 + 1,
+                speedX: Math.random() * 1 - 0.5,
+                speedY: Math.random() * 1 - 0.5,
+                color: `rgba(255, 0, 100, ${Math.random() * 0.8})`
+            });
+        }
+        
+        // Función de animación
+        function animate() {
+            animationId = requestAnimationFrame(animate);
+            
+            // Limpiar canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Actualizar y dibujar partículas
+            particles.forEach((particle, index) => {
+                particle.x += particle.speedX;
+                particle.y += particle.speedY;
+                
+                // Rebote en los bordes
+                if (particle.x > canvas.width || particle.x < 0) {
+                    particle.speedX = -particle.speedX;
+                }
+                if (particle.y > canvas.height || particle.y < 0) {
+                    particle.speedY = -particle.speedY;
+                }
+                
+                // Dibujar partícula
+                ctx.beginPath();
+                ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                ctx.fillStyle = particle.color;
+                ctx.fill();
+                
+                // Conectar partículas cercanas
+                for (let j = index + 1; j < particles.length; j++) {
+                    const dx = particles[j].x - particle.x;
+                    const dy = particles[j].y - particle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(255, 0, 100, ${0.1 - distance/1000})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particle.x, particle.y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            });
+            
+            // Si hay audio reproduciéndose, actualizar animación según el audio
+            if (isPlaying) {
+                analyser.getByteFrequencyData(dataArray);
+                
+                // Usar datos de frecuencia para modificar partículas
+                for (let i = 0; i < particles.length; i++) {
+                    const index = i % dataArray.length;
+                    const audioValue = dataArray[index] / 255;
+                    
+                    if (audioValue > 0.5) {
+                        particles[i].size = audioValue * 8;
+                        particles[i].speedX *= 1.01;
+                        particles[i].speedY *= 1.01;
+                    } else {
+                        particles[i].size = Math.max(1, particles[i].size * 0.98);
+                        particles[i].speedX *= 0.99;
+                        particles[i].speedY *= 0.99;
+                    }
+                }
+            }
+        }
+        
+        // Iniciar animación
+        animate();
+        
+        // Manejar reproducción de audio
+        document.getElementById('playButton')?.addEventListener('click', function() {
+            if (!audioContext) {
+                initAudio();
+            }
+            
+            if (isPlaying) {
+                audio.pause();
+                this.innerHTML = '<span class="play-icon">▶</span><span class="play-text">REPRODUCIR</span>';
+                isPlaying = false;
+            } else {
+                audio.play()
+                    .then(() => {
+                        this.innerHTML = '<span class="play-icon">⏸</span><span class="play-text">PAUSAR</span>';
+                        isPlaying = true;
+                    })
+                    .catch(error => {
+                        console.error("Error al reproducir audio:", error);
+                    });
+            }
+        });
+    </script>
+</body>
+</html>
