@@ -63,6 +63,28 @@
             background: linear-gradient(45deg, rgba(0,0,0,0.9) 0%, rgba(255,0,100,0.1) 100%);
         }
         
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+            
+            .text-4xl {
+                font-size: 2rem;
+                line-height: 2.25rem;
+            }
+            
+            .text-3xl {
+                font-size: 1.75rem;
+                line-height: 2rem;
+            }
+            
+            .py-20 {
+                padding-top: 5rem;
+                padding-bottom: 5rem;
+            }
+        }
+        
         /* Animaciones */
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
@@ -75,6 +97,9 @@
 
         .music-card {
             transition: all 0.3s ease;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
         }
 
         .music-card:hover {
@@ -121,14 +146,17 @@
                         <h1 className="text-xl md:text-2xl font-bold text-glow">
                             Los Chalados de la Euritmia
                         </h1>
-                        <nav>
-                            <ul className="flex space-x-6">
-                                <li><a href="#inicio" className="hover:text-primary transition-colors">Inicio</a></li>
-                                <li><a href="#nosotros" className="hover:text-primary transition-colors">Nosotros</a></li>
-                                <li><a href="#integrantes" className="hover:text-primary transition-colors">Integrantes</a></li>
-                                <li><a href="#musica" className="hover:text-primary transition-colors">Música</a></li>
-                                <li><a href="autografos.html" className="hover:text-primary transition-colors">Autógrafos</a></li>
-                                <li><a href="#contacto" className="hover:text-primary transition-colors">Contacto</a></li>
+                        <button id="menu-toggle" className="md:hidden text-2xl">
+                            <i className="ph ph-list"></i>
+                        </button>
+                        <nav className="hidden md:block">
+                            <ul className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-6">
+                                <li><a href="#inicio" className="hover:text-primary transition-colors block py-2">Inicio</a></li>
+                                <li><a href="#nosotros" className="hover:text-primary transition-colors block py-2">Nosotros</a></li>
+                                <li><a href="#integrantes" className="hover:text-primary transition-colors block py-2">Integrantes</a></li>
+                                <li><a href="#musica" className="hover:text-primary transition-colors block py-2">Música</a></li>
+                                <li><a href="autografos.html" className="hover:text-primary transition-colors block py-2">Autógrafos</a></li>
+                                <li><a href="#contacto" className="hover:text-primary transition-colors block py-2">Contacto</a></li>
                             </ul>
                         </nav>
                     </div>
@@ -593,6 +621,32 @@
         
         // Iniciar animación
         animate();
+        
+        // Toggle del menú móvil
+        const menuToggle = document.getElementById('menu-toggle');
+        const navMenu = document.querySelector('nav');
+        
+        if (menuToggle) {
+            menuToggle.addEventListener('click', () => {
+                navMenu.classList.toggle('hidden');
+                navMenu.classList.toggle('absolute');
+                navMenu.classList.toggle('top-16');
+                navMenu.classList.toggle('left-0');
+                navMenu.classList.toggle('w-full');
+                navMenu.classList.toggle('bg-black');
+                navMenu.classList.toggle('bg-opacity-90');
+                navMenu.classList.toggle('p-4');
+            });
+        }
+        
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) {
+                    navMenu.classList.add('hidden');
+                }
+            });
+        });
         
         // Manejar reproducción de audio
         document.getElementById('playButton')?.addEventListener('click', function() {
