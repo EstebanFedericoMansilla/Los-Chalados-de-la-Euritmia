@@ -623,29 +623,55 @@
         animate();
         
         // Toggle del menú móvil
-        const menuToggle = document.getElementById('menu-toggle');
-        const navMenu = document.querySelector('nav');
-        
-        if (menuToggle) {
-            menuToggle.addEventListener('click', () => {
-                navMenu.classList.toggle('hidden');
-                navMenu.classList.toggle('absolute');
-                navMenu.classList.toggle('top-16');
-                navMenu.classList.toggle('left-0');
-                navMenu.classList.toggle('w-full');
-                navMenu.classList.toggle('bg-black');
-                navMenu.classList.toggle('bg-opacity-90');
-                navMenu.classList.toggle('p-4');
-            });
-        }
-        
-        // Cerrar menú al hacer clic en un enlace
-        document.querySelectorAll('nav a').forEach(link => {
-            link.addEventListener('click', () => {
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menu-toggle');
+            const nav = document.querySelector('nav');
+            
+            if (menuToggle && nav) {
+                // Asegurarse de que el menú esté oculto inicialmente en móviles
                 if (window.innerWidth < 768) {
-                    navMenu.classList.add('hidden');
+                    nav.classList.add('hidden');
+                    nav.classList.remove('block');
                 }
-            });
+                
+                menuToggle.addEventListener('click', function() {
+                    // Alternar la clase 'hidden' en el menú de navegación
+                    nav.classList.toggle('hidden');
+                    nav.classList.toggle('block');
+                    
+                    // Cambiar el ícono del botón
+                    const icon = menuToggle.querySelector('i');
+                    if (nav.classList.contains('block')) {
+                        icon.className = 'ph ph-x text-xl';
+                        // Posicionar el menú debajo del header
+                        nav.style.position = 'absolute';
+                        nav.style.top = '100%';
+                        nav.style.left = '0';
+                        nav.style.width = '100%';
+                        nav.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+                        nav.style.padding = '1rem 0';
+                        nav.style.zIndex = '1000';
+                    } else {
+                        icon.className = 'ph ph-list text-xl';
+                        // Restaurar estilos cuando se cierra el menú
+                        nav.removeAttribute('style');
+                    }
+                });
+                
+                // Cerrar el menú al hacer clic en un enlace (solo en móviles)
+                const navLinks = nav.querySelectorAll('a');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        if (window.innerWidth < 768) {
+                            nav.classList.add('hidden');
+                            nav.classList.remove('block');
+                            const icon = menuToggle.querySelector('i');
+                            icon.className = 'ph ph-list text-xl';
+                            nav.removeAttribute('style');
+                        }
+                    });
+                });
+            }
         });
         
         // Manejar reproducción de audio
