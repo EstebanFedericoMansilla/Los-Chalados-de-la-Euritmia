@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autógrafos - Los Chalados de la Euritmia</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#ff0064',
+                        dark: '#0f0f0f',
+                    },
+                    fontFamily: {
+                        poppins: ['Poppins', 'sans-serif'],
+                        script: ['"Dancing Script"', 'cursive'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .autograph-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 0, 100, 0.2);
+            overflow: hidden;
+        }
+        
+        .autograph-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(255, 0, 100, 0.2);
+            border-color: rgba(255, 0, 100, 0.5);
+        }
+        
+        .btn-download {
+            background: linear-gradient(45deg, #ff0064, #ff4d94);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 100, 0.4);
+        }
+        
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 0, 100, 0.8);
+        }
+        
+        .autograph-canvas {
+            width: 100%;
+            height: 200px;
+            background-color: #0f0f0f;
+            margin-bottom: 1rem;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-black bg-opacity-50 backdrop-blur-sm fixed w-full z-50 py-4">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="text-xl md:text-2xl font-bold text-white hover:text-primary transition-colors">
+                Los Chalados de la Euritmia
+            </a>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="index.html" class="hover:text-primary transition-colors">Inicio</a></li>
+                    <li><a href="index.html#nosotros" class="hover:text-primary transition-colors">Nosotros</a></li>
+                    <li><a href="index.html#integrantes" class="hover:text-primary transition-colors">Integrantes</a></li>
+                    <li><a href="index.html#musica" class="hover:text-primary transition-colors">Música</a></li>
+                    <li><a href="index.html#contacto" class="hover:text-primary transition-colors">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="pt-24 pb-16 px-4">
+        <div class="container mx-auto">
+            <h1 class="text-4xl md:text-5xl font-bold text-center mb-4 text-glow">Autógrafos</h1>
+            <p class="text-center text-gray-300 max-w-2xl mx-auto mb-12">
+                Descarga autógrafos digitales de Los Chalados de la Euritmia. ¡Guárdalos, compártelos o imprímelos como recuerdo!
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Autógrafo Clásico -->
+                <div class="autograph-card p-6 flex flex-col items-center">
+                    <div class="autograph-canvas" id="autografoClasico"></div>
+                    <h3 class="text-xl font-bold mb-2">Autógrafo Clásico</h3>
+                    <p class="text-gray-300 text-sm text-center mb-4">Firma clásica de la banda</p>
+                    <button onclick="descargarAutografo('clasico')" class="btn-download text-white px-6 py-2 rounded-full font-medium w-full text-center">
+                        <i class="ph ph-download-simple mr-2"></i>Descargar
+                    </button>
+                </div>
+                
+                <!-- Autógrafo Especial -->
+                <div class="autograph-card p-6 flex flex-col items-center">
+                    <div class="autograph-canvas" id="autografoEspecial"></div>
+                    <h3 class="text-xl font-bold mb-2">Firma Especial</h3>
+                    <p class="text-gray-300 text-sm text-center mb-4">Con dedicatoria personal</p>
+                    <button onclick="descargarAutografo('especial')" class="btn-download text-white px-6 py-2 rounded-full font-medium w-full text-center">
+                        <i class="ph ph-download-simple mr-2"></i>Descargar
+                    </button>
+                </div>
+                
+                <!-- Colección Completa -->
+                <div class="autograph-card p-6 flex flex-col items-center">
+                    <div class="autograph-canvas" id="autografoCompleto"></div>
+                    <h3 class="text-xl font-bold mb-2">Colección Completa</h3>
+                    <p class="text-gray-300 text-sm text-center mb-4">Todas las firmas en un solo archivo</p>
+                    <button onclick="descargarAutografo('completo')" class="btn-download text-white px-6 py-2 rounded-full font-medium w-full text-center">
+                        <i class="ph ph-download-simple mr-2"></i>Descargar Pack
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-16 bg-gray-900 bg-opacity-50 rounded-xl p-8 max-w-4xl mx-auto">
+                <h2 class="text-2xl font-bold mb-4 text-center text-primary">¿Cómo obtener tu autógrafo personalizado?</h2>
+                <div class="grid md:grid-cols-3 gap-6 mt-8">
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ph ph-envelope-simple text-2xl text-primary"></i>
+                        </div>
+                        <h3 class="font-bold mb-2">1. Envíanos un mensaje</h3>
+                        <p class="text-sm text-gray-300">Contáctanos a través de nuestras redes sociales</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ph ph-pen-nib text-2xl text-primary"></i>
+                        </div>
+                        <h3 class="font-bold mb-2">2. Personalizamos</h3>
+                        <p class="text-sm text-gray-300">Preparamos un autógrafo especial para ti</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-16 h-16 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="ph ph-download-simple text-2xl text-primary"></i>
+                        </div>
+                        <h3 class="font-bold mb-2">3. Descarga</h3>
+                        <p class="text-sm text-gray-300">Recibe tu autógrafo digital en alta calidad</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black bg-opacity-50 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-400 text-sm">© 2024 Los Chalados de la Euritmia. Todos los derechos reservados.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="https://www.facebook.com/carlos.nollac" class="text-gray-400 hover:text-primary transition-colors">
+                    <i class="ph ph-facebook-logo text-2xl"></i>
+                </a>
+                <a href="https://www.instagram.com/estevrock/" class="text-gray-400 hover:text-primary transition-colors">
+                    <i class="ph ph-instagram-logo text-2xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-primary transition-colors">
+                    <i class="ph ph-youtube-logo text-2xl"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Efecto de desplazamiento suave para los enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Función para crear un autógrafo en un canvas
+        function crearAutografo(elementId, tipo) {
+            const canvas = document.createElement('canvas');
+            const contenedor = document.getElementById(elementId);
+            const ancho = contenedor.offsetWidth;
+            const alto = contenedor.offsetHeight;
+            
+            canvas.width = ancho * 2; // Para mejor calidad en pantallas retina
+            canvas.height = alto * 2;
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            
+            const ctx = canvas.getContext('2d');
+            
+            // Fondo
+            ctx.fillStyle = '#0f0f0f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Gradiente para el texto
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            gradient.addColorStop(0, '#ff0064');
+            gradient.addColorStop(1, '#8a2be2');
+            
+            // Texto del autógrafo
+            ctx.fillStyle = gradient;
+            ctx.textAlign = 'center';
+            
+            // Estilo del texto principal
+            ctx.font = 'bold ' + (canvas.width / 15) + 'px "Poppins", sans-serif';
+            ctx.fillText('Los Chalados', canvas.width / 2, canvas.height / 3);
+            
+            // Firma según el tipo
+            ctx.font = 'normal ' + (canvas.width / 10) + 'px "Dancing Script", cursive';
+            
+            switch(tipo) {
+                case 'clasico':
+                    ctx.fillText('Gracias', canvas.width / 2, canvas.height / 1.8);
+                    break;
+                case 'especial':
+                    ctx.fillText('Con cariño', canvas.width / 2, canvas.height / 1.8);
+                    break;
+                case 'completo':
+                    ctx.font = 'normal ' + (canvas.width / 14) + 'px "Dancing Script", cursive';
+                    ctx.fillText('Gracias por', canvas.width / 2, canvas.height / 2.5);
+                    ctx.fillText('tu apoyo', canvas.width / 2, canvas.height / 1.8);
+                    break;
+            }
+            
+            // Fecha
+            const fecha = new Date().toLocaleDateString('es-AR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            ctx.font = 'bold ' + (canvas.width / 30) + 'px "Poppins", sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.fillText('Tilisarao, San Luis', canvas.width / 2, canvas.height - 50);
+            
+            // Agregar el canvas al contenedor
+            contenedor.innerHTML = '';
+            contenedor.appendChild(canvas);
+        }
+        
+        // Función para descargar el autógrafo
+        function descargarAutografo(tipo) {
+            // Crear un canvas temporal con mayor resolución
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Tamaño para impresión (1200x800 píxeles)
+            canvas.width = 1200;
+            canvas.height = 800;
+            
+            // Fondo
+            ctx.fillStyle = '#0f0f0f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Gradiente para el texto
+            const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
+            gradient.addColorStop(0, '#ff0064');
+            gradient.addColorStop(1, '#8a2be2');
+            
+            // Texto del autógrafo
+            ctx.fillStyle = gradient;
+            ctx.textAlign = 'center';
+            
+            // Estilo del texto principal
+            ctx.font = 'bold 80px "Poppins", sans-serif';
+            ctx.fillText('Los Chalados de la Euritmia', canvas.width / 2, 200);
+            
+            // Firma según el tipo
+            ctx.font = 'normal 100px "Dancing Script", cursive';
+            
+            switch(tipo) {
+                case 'clasico':
+                    ctx.fillText('Gracias por tu apoyo', canvas.width / 2, 400);
+                    break;
+                case 'especial':
+                    ctx.fillText('Con cariño, Los Chalados', canvas.width / 2, 400);
+                    break;
+                case 'completo':
+                    ctx.font = 'normal 60px "Dancing Script", cursive';
+                    // Primera línea
+                    ctx.fillText('Gracias por ser parte', canvas.width / 2, 380);
+                    // Segunda línea
+                    ctx.fillText('de nuestra música', canvas.width / 2, 450);
+                    // Tercera línea (más pequeña)
+                    ctx.font = 'normal 50px "Dancing Script", cursive';
+                    ctx.fillText('Los Chalados de la Euritmia', canvas.width / 2, 540);
+                    break;
+            }
+            
+            // Fecha
+            const fecha = new Date().toLocaleDateString('es-AR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            ctx.font = 'bold 24px "Poppins", sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            ctx.fillText(`Tilisarao, San Luis - ${fecha}`, canvas.width / 2, 700);
+            
+            // Línea decorativa
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 2 - 150, 600);
+            ctx.lineTo(canvas.width / 2 + 150, 600);
+            ctx.strokeStyle = '#ff0064';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // Convertir a imagen y descargar
+            const enlace = document.createElement('a');
+            enlace.download = `autografo_chalados_${tipo}.png`;
+            enlace.href = canvas.toDataURL('image/png');
+            enlace.click();
+        }
+        
+        // Inicializar los autógrafos al cargar la página
+        window.onload = function() {
+            crearAutografo('autografoClasico', 'clasico');
+            crearAutografo('autografoEspecial', 'especial');
+            crearAutografo('autografoCompleto', 'completo');
+            
+            // Manejar el redimensionamiento de la ventana
+            window.addEventListener('resize', function() {
+                crearAutografo('autografoClasico', 'clasico');
+                crearAutografo('autografoEspecial', 'especial');
+                crearAutografo('autografoCompleto', 'completo');
+            });
+        };
+    </script>
+</body>
+</html>
